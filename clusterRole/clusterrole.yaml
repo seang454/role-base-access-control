@@ -1,0 +1,13 @@
+# before creating this run these command
+  # kubectl create namespace rbac-crole
+  # kubectl create serviceaccount ci-service -n rbac-crole
+
+# clusterrole.yaml
+apiVersion: rbac.authorization.k8s.io/v1
+kind: ClusterRole
+metadata:
+  name: pod-reader-all
+rules:
+- apiGroups: [""]
+  resources: ["pods"]
+  verbs: ["get","list","watch","create","update","patch","delete","deletecollection"]

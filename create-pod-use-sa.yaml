@@ -1,0 +1,13 @@
+# image: bitnami/kubectl is a container image that already has kubectl installed 🧰
+# It’s mainly used when you want to run kubectl inside a container, not on your laptop.
+apiVersion: v1
+kind: Pod
+metadata:
+  name: rbac-demo-pod
+  namespace: rbac-test
+spec:
+  serviceAccountName: test-sa
+  containers:
+  - name: kubectl
+    image: bitnami/kubectl
+    command: ["/bin/sh", "-c", "sleep infinity"]

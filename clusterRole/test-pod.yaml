@@ -1,0 +1,11 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: test-pod
+  namespace: rbac-crole
+spec:
+  serviceAccountName: ci-service
+  containers:
+  - name: kubectl
+    image: bitnami/kubectl
+    command: ["sleep", "3600"]
