@@ -37,3 +37,67 @@ kubectl apply -f test-pod.yaml
 kubectl get pods -n rbac-crole
 kubectl exec -it test-pod -n rbac-crole -- sh
 ```
+
+
+# Three Types of Subjects in Kubernetes
+
+WHO can authenticate to Kubernetes?
+
+1. User
+2. Group
+3. ServiceAccount
+
+1. User
+```bash
+- Represents a HUMAN (like you)
+- Kubernetes does NOT manage users
+- No token created by K8s
+- Uses certificate + private key instead
+
+Example: YOUR ~/.kube/config
+  client-certificate-data: LS0tLS1CRUdJTi...  ← certificate
+  client-key-data: LS0tLS1CRUdJTiBSU0E...     ← private key
+
+Token needed? ❌ Uses certificate instead
+
+```
+2. Group
+```bash
+- Represents a COLLECTION of users
+- Kubernetes does NOT manage groups either
+- No token, no certificate
+- Just a label to apply roles to many users at once
+
+Example:
+  system:masters      ← built-in admin group
+  system:authenticated ← all authenticated users
+  developers          ← custom group you define
+
+Token needed? ❌ Groups don't authenticate
+                 individual users inside group authenticate
+
+```
+
+3. ServiceAccount
+```bash
+- Represents an APPLICATION (like Jenkins)
+- Kubernetes DOES manage service accounts
+- Lives inside a namespace
+- NEEDS a token to authenticate
+
+Example: jenkins-admin in devops-tools namespace
+
+Token needed? ✅ YES — this is the only one
+                       K8s creates/manages tokens for
+
+```
+
+# sum up
+|                         | User                | Group        | ServiceAccount  |
+|                         |                     |---           |---              |
+| **Represents**          | Human       | Collection of users  | Application     |
+| **Managed by K8s**      | ❌          | ❌                  | ✅              |
+| **Auth method**         | Certificate  | N/A                 | Token            |
+| **Needs token**         | ❌          | ❌                  | ✅              |
+| **Lives in namespace**  | ❌          | ❌                  | ✅              |
+| **Example**             | you          | developers          | jenkins-admin    |
